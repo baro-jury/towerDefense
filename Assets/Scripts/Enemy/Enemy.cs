@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     public int Health { get; set; }
     public float MoveSpeed { get; set; }
     public int DeathCoinReward { get; set; }
+
     public Waypoint Waypoint { get; set; }
     public Vector3 CurrentPointPosition { get; set; }
 
