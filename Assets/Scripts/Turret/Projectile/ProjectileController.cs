@@ -6,8 +6,6 @@ public class ProjectileController : MonoBehaviour
 {
     [SerializeField] private Transform magazine;
     [SerializeField] private GameObject prefab;
-    //[SerializeField] private List<GameObject> prefabs;
-    //[SerializeField] private int prefabIndex;
 
     private GameObject _projectile;
 
@@ -19,7 +17,6 @@ public class ProjectileController : MonoBehaviour
     protected void AddProjectilesToMagazine()
     {
         GameObject obj = Instantiate(prefab, magazine);
-        //GameObject obj = Instantiate(prefabs[prefabIndex], magazine);
         obj.SetActive(false);
         _projectile = obj;
     }

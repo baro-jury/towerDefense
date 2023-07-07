@@ -24,12 +24,12 @@ public class BulletTurretProjectileDetail : TurretProjectile
 
     private void FireProjectile(Vector3 direction)
     {
-        GameObject instance = _projectilePool.GetProjectileFromMagazine();
+        GameObject instance = _projectileController.GetProjectileFromMagazine();
         instance.transform.position = projectileSpawner.position;
 
         BulletProjectile projectile = instance.GetComponent<BulletProjectile>();
         //projectile.Direction = direction;
-        projectile.Damage = Damage;
+        projectile.TurretOwner.Damage = Damage;
         //AudioManager.instance.PlayerSound(AudioManager.Sound.machineBullet);
 
         if (isDualMachine)

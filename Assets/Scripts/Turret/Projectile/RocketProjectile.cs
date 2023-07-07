@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class RocketProjectile : Projectile
 {
-    void Update()
+    protected override void Update()
     {
         if (_enemyTarget != null)
         {
             MoveProjectile();
-            RotateProjectile();
         }
+        CheckProjectilePosition();
     }
 
     protected override void MoveProjectile()
@@ -41,6 +41,39 @@ public class RocketProjectile : Projectile
         //} 
         #endregion
 
-        base.MoveProjectile();
+        transform.Translate(transform.up * moveSpeed * Time.deltaTime, Space.World);
+    }
+
+    void CheckProjectilePosition()
+    {
+        Vector3 viewportPosition = Camera.main.WorldToViewportPoint(transform.position);
+
+        if (viewportPosition.x < 0 || viewportPosition.y < 0 || viewportPosition.x > 1 || viewportPosition.y > 1)
+        {
+            Destroy(gameObject); ;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D target)
+    {
+        if (target.CompareTag("Enemy"))
+        {
+            Enemy enemy = target.GetComponent<Enemy>();
+            enemy.Health -= TurretOwner.Damage;
+            if (enemy.Health > 0)
+            {
+                OnEnemyHit?.Invoke(enemy);
+            }
+            else
+            {
+                OnEnemyDead?.Invoke(enemy);
+            }
+            Destroy(gameObject);
+        }
+    }
+
+    void OnBecameInvisible()
+    {
+        //Destroy(gameObject);
     }
 }

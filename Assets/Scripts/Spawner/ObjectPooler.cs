@@ -5,52 +5,63 @@ using UnityEngine;
 public class ObjectPooler : MonoBehaviour
 {
     [SerializeField] private List<GameObject> prefabs;
-    [SerializeField] private int prefabIndex;
 
     //[SerializeField] private GameObject prefab; 
-    [SerializeField] private int poolSize = 10;
+    //[SerializeField] private int poolSize = 10;
     [SerializeField] private GameObject _poolContainer;
 
-    public int NumberOfEnemyType { get { return prefabs.Count; } }
-    public int PoolSize { get { return poolSize; } }
+    private List<int> _enemiesInWave;
+    private int _poolSize;
+    private int _prefabIndex;
 
-    protected List<GameObject> _pool;
+    public int PoolSize { get { return _poolSize; } }
 
-    protected virtual void Awake()
+    public List<GameObject> pool;
+
+    void Awake()
     {
-        _pool = new List<GameObject>();
-        //_poolContainer = new GameObject($"Pool - {prefab.name}");
+        SetupPooler();
+    }
+
+    protected virtual void Start()
+    {
+        //SetupPooler();
+    }
+
+    public void SetupPooler()
+    {
+        pool = new List<GameObject>();
+        _enemiesInWave = LevelManager.levelData.Enemies;
+        _poolSize = LevelManager.levelData.Enemies.Count;
+        //_enemiesInWave = LevelManager.levelData.Waves[0].EnemyIndexes;
+        //_poolSize = LevelManager.levelData.Waves[0].EnemyIndexes.Count;
         AddPrefabsToPool();
     }
 
     private void AddPrefabsToPool()
     {
-        for (int j = 0; j < NumberOfEnemyType; j++)
+        for (int i = 0; i < PoolSize; i++)
         {
-            prefabIndex = j;
-            for (int i = 0; i < PoolSize; i++)
-            {
-                _pool.Add(CreatePrefab());
-            }
+            _prefabIndex = _enemiesInWave[i];
+            pool.Add(CreatePrefab());
         }
     }
 
     protected virtual GameObject CreatePrefab()
     {
-        GameObject obj = Instantiate(prefabs[prefabIndex], _poolContainer.transform);
-        obj.name = prefabs[prefabIndex].name + " - " + obj.transform.GetSiblingIndex();
+        GameObject obj = Instantiate(prefabs[_prefabIndex], _poolContainer.transform);
         obj.SetActive(false);
         return obj;
     }
 
     public GameObject GetNextPrefabFromPool()
     {
-        for (int i = 0; i < _pool.Count; i++)
+        for (int i = 0; i < pool.Count; i++)
         {
-            if (_pool[i].transform.position == _poolContainer.transform.position
-                && !_pool[i].activeInHierarchy)
+            if (pool[i].transform.position == _poolContainer.transform.position
+                && !pool[i].activeInHierarchy)
             {
-                return _pool[i];
+                return pool[i];
             }
         }
         return CreatePrefab();

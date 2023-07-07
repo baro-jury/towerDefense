@@ -9,6 +9,7 @@ public class TurretProjectile : MonoBehaviour
     [SerializeField] protected float delayPerShot = 2f;
     [SerializeField] protected Transform projectileSpawner;
 
+    public AudioClip ProjectileClip { get; set; }
     public int Damage { get; set; }
     public float DelayPerShot { get; set; }
     public bool CanReload { get; set; }
@@ -41,6 +42,7 @@ public class TurretProjectile : MonoBehaviour
             }
             if (_turret.CurrentEnemyTarget != null && _currentProjectileLoaded != null)
             {
+                AudioManager.instance.soundSource.PlayOneShot(ProjectileClip);
                 _currentProjectileLoaded.transform.parent = null;
                 _currentProjectileLoaded.SetEnemy(_turret.CurrentEnemyTarget);
             }
@@ -53,7 +55,7 @@ public class TurretProjectile : MonoBehaviour
         GameObject projectile = _projectileController.GetProjectileFromMagazine();
         _currentProjectileLoaded = projectile.GetComponent<Projectile>();
         _currentProjectileLoaded.TurretOwner = this;
-        _currentProjectileLoaded.Damage = Damage;
+        //_currentProjectileLoaded.Damage = Damage;
         projectile.SetActive(true);
     }
 

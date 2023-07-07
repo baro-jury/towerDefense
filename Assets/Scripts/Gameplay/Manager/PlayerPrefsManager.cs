@@ -7,7 +7,6 @@ public class PlayerPrefsManager : MonoBehaviour
     public static PlayerPrefsManager instance;
 
     private const string LEVEL = "Level";
-    private const string COINS = "Coins";
 
     void _MakeSingleInstance()
     {
@@ -27,8 +26,6 @@ public class PlayerPrefsManager : MonoBehaviour
         if (!PlayerPrefs.HasKey("_CheckFirstTimePlayGame"))
         {
             PlayerPrefs.SetInt(LEVEL, 1);
-            //PlayerPrefs.SetInt(COINS, 200);
-            PlayerPrefs.SetInt(COINS, 0999999999);
             PlayerPrefs.SetInt("_CheckFirstTimePlayGame", 0);
         }
     }
@@ -51,19 +48,5 @@ public class PlayerPrefsManager : MonoBehaviour
         PlayerPrefs.SetInt(LEVEL, level);
     }
 
-    public int _GetCoinsInPossession()
-    {
-        return PlayerPrefs.GetInt(COINS);
-    }
-
-    public void _SetCoinsInPossession(int coin, bool isEarning)
-    {
-        int temp = -1;
-        if (isEarning) temp = 1;
-        if (PlayerPrefs.GetInt(COINS) + temp * coin > 0)
-            PlayerPrefs.SetInt(COINS, PlayerPrefs.GetInt(COINS) + temp * coin);
-        else
-            PlayerPrefs.SetInt(COINS, 0);
-    }
 
 }

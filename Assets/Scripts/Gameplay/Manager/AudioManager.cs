@@ -6,7 +6,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
 
-    public AudioSource audioSource;
+    public AudioSource soundSource;
     public AudioSource musicSource;
 
     void _MakeSingleInstance()

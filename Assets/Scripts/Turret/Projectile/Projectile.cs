@@ -1,22 +1,37 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
+using static UnityEngine.GraphicsBuffer;
 
-public abstract class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour
 {
-    public static Action<Enemy, int> OnEnemyDamaged;
     public static Action<Enemy> OnEnemyHit;
     public static Action<Enemy> OnEnemyDead;
 
     [SerializeField] protected float moveSpeed = 10f;
     [SerializeField] protected float minDistanceToDealDamage = 1f;
 
-    public int Damage { get; set; }
     public TurretProjectile TurretOwner { get; set; }
 
     protected Enemy _enemyTarget;
+
+    protected virtual void Update()
+    {
+        if (_enemyTarget != null)
+        {
+            MoveProjectile();
+            RotateProjectile();
+        }
+        //else
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
+    }
 
     protected virtual void MoveProjectile()
     {
@@ -24,7 +39,7 @@ public abstract class Projectile : MonoBehaviour
         float distanceToTarget = (_enemyTarget.transform.position - transform.position).magnitude;
         if (distanceToTarget < minDistanceToDealDamage)
         {
-            _enemyTarget.Health -= Damage;
+            _enemyTarget.Health -= TurretOwner.Damage;
             if (_enemyTarget.Health > 0)
             {
                 OnEnemyHit?.Invoke(_enemyTarget);
@@ -36,6 +51,11 @@ public abstract class Projectile : MonoBehaviour
 
             Destroy(gameObject);
         }
+        //----------------------------------
+        //Vector3 dir = _enemyTarget.transform.position - transform.position;
+        //float distance = moveSpeed * Time.deltaTime;
+        //transform.Translate(dir.normalized * distance, Space.World);
+        //transform.LookAt(_enemyTarget.transform);
     }
 
     protected void RotateProjectile()

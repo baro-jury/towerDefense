@@ -61,6 +61,11 @@ public class EnemyAnimations : MonoBehaviour
         //_enemyHealth.ResetHealth();
         _enemy.ResetHealth();
         ObjectPooler.ReturnToPool(_enemy.gameObject);
+
+        if (Spawner.instance.NoEnemies())
+        {
+            GameplayController.instance._CompleteLevel();
+        }
     }
 
     private void EnemyDamaged(Enemy enemy, int damage)
@@ -95,7 +100,6 @@ public class EnemyAnimations : MonoBehaviour
     {
         //EnemyHealth.OnEnemyHit += EnemyHit;
         //EnemyHealth.OnEnemyKilled += EnemyDead;
-        Projectile.OnEnemyDamaged += EnemyDamaged;
         Projectile.OnEnemyHit += EnemyHit;
         Projectile.OnEnemyDead += EnemyDead;
     }
@@ -104,7 +108,6 @@ public class EnemyAnimations : MonoBehaviour
     {
         //EnemyHealth.OnEnemyHit -= EnemyHit;
         //EnemyHealth.OnEnemyKilled -= EnemyDead;
-        Projectile.OnEnemyDamaged -= EnemyDamaged;
         Projectile.OnEnemyHit -= EnemyHit;
         Projectile.OnEnemyDead -= EnemyDead;
     }
