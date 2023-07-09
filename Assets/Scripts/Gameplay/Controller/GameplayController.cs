@@ -51,6 +51,7 @@ public class GameplayController : MonoBehaviour
 
     private float progressValue;
     private Turret _turret;
+    private TurretContainer _turretContainer;
 
     void MakeInstance()
     {
@@ -81,17 +82,20 @@ public class GameplayController : MonoBehaviour
             _ => false,
         };
 
-        doubleBarrelledButton.interactable = LevelManager.instance.TotalCoins switch
-        {
-            >= 15 => true,
-            _ => false,
-        };
+        doubleBarrelledButton.interactable = LevelManager.instance.TotalCoins >= 15;
 
-        rocketLauncherButton.interactable = LevelManager.instance.TotalCoins switch
+        rocketLauncherButton.interactable = LevelManager.instance.TotalCoins >= 20;
+
+        try
         {
-            >= 20 => true,
-            _ => false,
-        };
+            upgradeButton.interactable = _turretContainer.CanUpgrade &&
+                LevelManager.instance.TotalCoins >= _turret.CoinUpgrade;
+        }
+        catch(Exception ex) 
+        {
+            upgradeButton.interactable = false;
+        }
+        
     }
 
     #region Configuration
@@ -266,6 +270,7 @@ public class GameplayController : MonoBehaviour
     void OpenAdjustPanel(TurretContainer turretContainer)
     {
         _turret = turretContainer.transform.GetChild(0).GetComponent<Turret>();
+        _turretContainer = turretContainer;
         //_turret = turretsBuild[turretContainer.GetComponent<TurretContainer>().TurretIndex].GetComponent<Turret>();
         //Debug.Log(_turret.CoinBuy + " - " + _turret.CoinUpgrade + " - " + _turret.CoinSell);
 
@@ -277,16 +282,7 @@ public class GameplayController : MonoBehaviour
         upgradeButton.onClick.RemoveAllListeners();
         sellButton.onClick.RemoveAllListeners();
 
-        if (LevelManager.instance.TotalCoins >= _turret.CoinUpgrade
-            && turretContainer.CanUpgrade)
-        {
-            upgradeButton.interactable = true;
-            upgradeButton.onClick.AddListener(delegate { _UpgradeTurret(turretContainer); });
-        }
-        else
-        {
-            upgradeButton.interactable = false;
-        }
+        upgradeButton.onClick.AddListener(delegate { _UpgradeTurret(turretContainer); });
         sellButton.onClick.AddListener(delegate { _SellTurret(turretContainer); });
     }
     public void _UpgradeTurret(TurretContainer turretContainer)
