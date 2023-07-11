@@ -33,7 +33,7 @@ public class GameplayController : MonoBehaviour
     [SerializeField]
     private List<Text> levelTexts;
 
-    public AudioClip clickButtonClip, switchClip, passLevelClip;
+    public AudioClip clickButtonClip, switchClip, levelFailedClip, levelCompletedClip;
     //singleBulletClip, singleLaserClip, doubleBulletClip, doubleLaserClip, rocketClip, doubleRocketClip
 
     //public Transform startCoinAnimPos, endCoinAnimPos, rewardPos;
@@ -456,6 +456,7 @@ public class GameplayController : MonoBehaviour
     public void _GameOver()
     {
         Time.timeScale = 0;
+        AudioManager.instance.soundSource.PlayOneShot(levelFailedClip);
         MakeImageTransparent(gameOverPanel.transform.GetComponent<Image>());
         gameOverPanel.transform.GetChild(0).GetComponent<RectTransform>().localScale = Vector3.zero;
         gameOverPanel.SetActive(true);
@@ -475,6 +476,7 @@ public class GameplayController : MonoBehaviour
     {
         Time.timeScale = 0;
         AudioManager.instance.soundSource.Stop();
+        AudioManager.instance.soundSource.PlayOneShot(levelCompletedClip);
 
         if (PlayerPrefsManager.instance._GetCurrentLevel() < Resources.LoadAll("Levels").Length)
         {
