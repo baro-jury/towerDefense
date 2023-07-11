@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
 
 [CustomEditor(typeof(Waypoint))]
 public class WaypointEditor : Editor
@@ -11,7 +11,7 @@ public class WaypointEditor : Editor
     private void OnSceneGUI()
     {
         Handles.color = new Color32(255, 80, 0, 255);
-        for(int i = 0; i < Waypoint.Points.Length; i++)
+        for (int i = 0; i < Waypoint.Points.Length; i++)
         {
             EditorGUI.BeginChangeCheck();
 
@@ -24,7 +24,7 @@ public class WaypointEditor : Editor
             GUIStyle textStyle = new GUIStyle();
             textStyle.fontStyle = FontStyle.Bold;
             textStyle.fontSize = 16;
-            textStyle.normal.textColor = Color.white; 
+            textStyle.normal.textColor = Color.white;
             Vector3 textAlligment = Vector3.down * 0.35f + Vector3.right * 0.35f;
             Handles.Label(Waypoint.CurrentPosition + Waypoint.Points[i] + textAlligment, $"{i + 1}", textStyle);
 
@@ -38,3 +38,5 @@ public class WaypointEditor : Editor
         }
     }
 }
+
+#endif
